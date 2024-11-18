@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "name": "Welcome Campaign",
+        "message": "Join our platform and get 10% rewards!",
+        "budget": 100,
+        "target": ["High Balance", "Active Wallets"],
+        "deliveryRate": 80,
+        "ctr": 25,
+        "conversions": 10
+    },
+    {
+        "id": 2,
+        "name": "Staking Campaign",
+        "message": "Stake with us and earn bonuses!",
+        "budget": 200,
+        "target": ["Active Wallets"],
+        "deliveryRate": 70,
+        "ctr": 20,
+        "conversions": 15
+    }
+]
