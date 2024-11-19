@@ -1,83 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { TextField, Button, Card, CardContent, Typography } from "@mui/material";
 
-const CampaignForm = ({ addCampaign }) => {
-    const [campaign, setCampaign] = useState({
-        name: '',
-        message: '',
-        budget: '',
-        target: []
-    });
+const CampaignForm = ({ onAddCampaign }) => {
+  const [formData, setFormData] = useState({
+    campaignName: "",
+    targetWallet: "",
+    budget: "",
+    message: "",
+  });
 
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        if (type === 'checkbox') {
-            setCampaign((prevState) => ({
-                ...prevState,
-                target: checked
-                    ? [...prevState.target, value]
-                    : prevState.target.filter((item) => item !== value),
-            }));
-        } else {
-            setCampaign({ ...campaign, [name]: value });
-        }
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        addCampaign({ ...campaign, id: Date.now() });
-        setCampaign({ name: '', message: '', budget: '', target: [] });
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.campaignName || !formData.targetWallet || !formData.budget || !formData.message) {
+      alert("All fields are required!");
+      return;
+    }
+    onAddCampaign(formData);
+    setFormData({ campaignName: "", targetWallet: "", budget: "", message: "" });
+    alert("Campaign Created Successfully!");
+  };
 
-    return (
+  return (
+    <Card style={{ marginBottom: "20px", padding: "20px" }}>
+      <CardContent>
+        <Typography variant="h5" gutterBottom>
+          Create a Campaign
+        </Typography>
         <form onSubmit={handleSubmit}>
-            <h2>Create Campaign</h2>
-            <div>
-                <label>Campaign Name:</label>
-                <input
-                    type="text"
-                    name="name"
-                    value={campaign.name}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Message:</label>
-                <textarea
-                    name="message"
-                    value={campaign.message}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Budget:</label>
-                <input
-                    type="number"
-                    name="budget"
-                    value={campaign.budget}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Target Wallets:</label>
-                <div>
-                    <input
-                        type="checkbox"
-                        value="High Balance"
-                        onChange={handleChange}
-                    /> High Balance
-                    <input
-                        type="checkbox"
-                        value="Active Wallets"
-                        onChange={handleChange}
-                    /> Active Wallets
-                </div>
-            </div>
-            <button type="submit">Create Campaign</button>
+          <TextField
+            label="Campaign Name"
+            name="campaignName"
+            value={formData.campaignName}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Target Wallet"
+            name="targetWallet"
+            value={formData.targetWallet}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Budget (in Crypto)"
+            name="budget"
+            value={formData.budget}
+            onChange={handleChange}
+            type="number"
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            fullWidth
+            multiline
+            rows={4}
+            margin="normal"
+          />
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Create Campaign
+          </Button>
         </form>
-    );
+      </CardContent>
+    </Card>
+  );
 };
 
 export default CampaignForm;
+
