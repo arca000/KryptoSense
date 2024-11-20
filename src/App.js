@@ -11,6 +11,7 @@ import {
   ListItemText,
   Toolbar,
   AppBar,
+  Paper,
 } from "@mui/material";
 import CampaignForm from "./components/CampaignForm";
 import CampaignDashboard from "./components/CampaignDashboard";
@@ -18,7 +19,7 @@ import AnalyticsCards from "./components/AnalyticsCards";
 
 const drawerWidth = 240;
 
-const App = () => {
+function App() {
   const [campaigns, setCampaigns] = useState([]);
 
   const addCampaign = (campaign) => {
@@ -74,7 +75,7 @@ const App = () => {
         >
           <Toolbar />
           <Container>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} alignItems="stretch">
               <Grid item xs={12} sm={4}>
                 <AnalyticsCards
                   title="Total Campaigns"
@@ -98,14 +99,28 @@ const App = () => {
                 />
               </Grid>
             </Grid>
-            <CampaignForm onAddCampaign={addCampaign} />
-            <CampaignDashboard campaigns={campaigns} />
+            <Box mt={4}>
+              <Paper elevation={3} sx={{ padding: 3 }}>
+                <Typography variant="h5" gutterBottom>
+                  Create a Campaign
+                </Typography>
+                <CampaignForm onAddCampaign={addCampaign} />
+              </Paper>
+            </Box>
+            <Box mt={4}>
+              <Paper elevation={3} sx={{ padding: 3 }}>
+                <Typography variant="h5" gutterBottom>
+                  Campaign Dashboard
+                </Typography>
+                <CampaignDashboard campaigns={campaigns} />
+              </Paper>
+            </Box>
           </Container>
         </Box>
       </Box>
     </>
   );
-};
+}
 
 export default App;
 
