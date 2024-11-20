@@ -1,77 +1,76 @@
 import React, { useState } from "react";
-import { TextField, Button, Card, CardContent, Typography } from "@mui/material";
+import { db } from "../firebaseConfig"; // Import the Firestore instance
+import { collection, addDoc } from "firebase/firestore"; // Firestore methods
 
-const CampaignForm = ({ onAddCampaign }) => {
-  const [formData, setFormData] = useState({
-    campaignName: "",
-    targetWallet: "",
-    budget: "",
-    message: "",
-  });
+const CampaignForm = () => {
+  const [campaignName, setCampaignName] = useState("");
+  const [targetWallet, setTargetWallet] = useState("");
+  const [budget, setBudget] = useState("");
+  const [message, setMessage] = useState("");
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.campaignName || !formData.targetWallet || !formData.budget || !formData.message) {
-      alert("All fields are required!");
-      return;
+
+    try {
+      // Add the data to Firestore
+      await addDoc(collection(db, "campaigns"), {
+        campaignName,
+        targetWallet,
+        budget: parseFloat(budget), // Ensure budget is stored as a number
+        message,
+        createdAt: new Date(), // Optional: Add a timestamp
+      });
+
+      alert("Campaign created successfully!");
+      // Clear the form fields after submission
+      setCampaignName("");
+      setTargetWallet("");
+      setBudget("");
+      setMessage("");
+    } catch (error) {
+      console.error("Error adding campaign: ", error); // Log the error for debugging
+      alert("Failed to create the campaign. Please try again.");
     }
-    onAddCampaign(formData);
-    setFormData({ campaignName: "", targetWallet: "", budget: "", message: "" });
-    alert("Campaign Created Successfully!");
   };
 
   return (
-    <Card style={{ marginBottom: "20px", padding: "20px" }}>
-      <CardContent>
-        <Typography variant="h5" gutterBottom>
-          Create a Campaign
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Campaign Name"
-            name="campaignName"
-            value={formData.campaignName}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Target Wallet"
-            name="targetWallet"
-            value={formData.targetWallet}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Budget (in Crypto)"
-            name="budget"
-            value={formData.budget}
-            onChange={handleChange}
-            type="number"
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            fullWidth
-            multiline
-            rows={4}
-            margin="normal"
-          />
-          <Button type="submit" variant="contained" color="primary" fullWidth>
-            Create Campaign
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Campaign Name:</label>
+        <input
+          type="text"
+          value={campaignName}
+          onChange={(e) => setCampaignName(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Target Wallet:</label>
+        <input
+          type="text"
+          value={targetWallet}
+          onChange={(e) => setTargetWallet(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Budget (in Crypto):</label>
+        <input
+          type="number"
+          value={budget}
+          onChange={(e) => setBudget(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Message:</label>
+        <textarea
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+      </div>
+      <button type="submit">Create Campaign</button>
+    </form>
   );
 };
 

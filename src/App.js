@@ -15,6 +15,18 @@ import {
 import CampaignForm from "./components/CampaignForm";
 import CampaignDashboard from "./components/CampaignDashboard";
 import AnalyticsCards from "./components/AnalyticsCards";
+import CampaignDashboard from "./components/CampaignDashboard";
+
+function App() {
+  return (
+    <div>
+      {/* Other components like Sidebar or Header */}
+      <CampaignDashboard />
+    </div>
+  );
+}
+
+export default App;
 
 const drawerWidth = 240;
 
